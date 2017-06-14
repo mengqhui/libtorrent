@@ -48,6 +48,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/aux_/session_settings.hpp"
 #include "libtorrent/aux_/block_cache_reference.hpp"
 #include "libtorrent/aux_/store_buffer.hpp"
+#include "libtorrent/debug.hpp"
 
 #include <mutex>
 #include <condition_variable>
@@ -152,12 +153,14 @@ namespace libtorrent {
 
 			void thread_fun(disk_io_thread_pool& pool, io_service::work work) override
 			{
+				ADD_OUTSTANDING_ASYNC("disk_io_thread::work");
 				m_owner.thread_fun(*this, pool);
 
 				// w's dtor releases the io_service to allow the run() call to return
 				// we do this once we stop posting new callbacks to it.
 				// after the dtor has been called, the disk_io_thread object may be destructed
 				TORRENT_UNUSED(work);
+				COMPLETE_ASYNC("disk_io_thread::work");
 			}
 
 			disk_io_thread& m_owner;
