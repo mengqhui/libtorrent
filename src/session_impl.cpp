@@ -1004,7 +1004,7 @@ namespace aux {
 		// can't iterate over it here
 		auto conns = m_connections;
 		for (auto const& p : conns)
-			p->disconnect(errors::stopping_torrent, op_bittorrent);
+			p->disconnect(errors::stopping_torrent, operation_t::bittorrent);
 
 		// close the listen sockets
 		for (auto const& l : m_listen_sockets)
@@ -2911,7 +2911,7 @@ namespace {
 			if (m_alerts.should_post<peer_disconnected_alert>())
 			{
 				m_alerts.emplace_alert<peer_disconnected_alert>(torrent_handle(), endp, peer_id()
-						, op_bittorrent, s->type()
+						, operation_t::bittorrent, s->type()
 						, error_code(errors::too_many_connections)
 						, close_reason_t::none);
 			}
@@ -3381,7 +3381,7 @@ namespace {
 			timeout *= is_i2p(*p->get_socket()) ? 4 : 1;
 #endif
 			if (m_last_tick - p->connected_time () > seconds(timeout))
-				p->disconnect(errors::timed_out, op_bittorrent);
+				p->disconnect(errors::timed_out, operation_t::bittorrent);
 		}
 
 		// --------------------------------------------------------------

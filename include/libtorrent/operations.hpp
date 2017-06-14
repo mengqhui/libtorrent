@@ -30,15 +30,82 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
 #ifndef TORRENT_OPERATIONS_HPP_INCLUDED
 #define TORRENT_OPERATIONS_HPP_INCLUDED
+
+#include "libtorrent/config.hpp"
+#include <cstdint>
 
 namespace libtorrent {
 
 	// these constants are used to identify the operation that failed, causing a
 	// peer to disconnect
-	enum operation_t
+	enum class operation_t : std::uint8_t
+	{
+		// this is used when the bittorrent logic
+		// determines to disconnect
+		bittorrent = 0,
+
+		// a call to iocontrol failed
+		iocontrol,
+
+		// a call to getpeername failed (querying the remote IP of a
+		// connection)
+		getpeername,
+
+		// a call to getname failed (querying the local IP of a
+		// connection)
+		getname,
+
+		// an attempt to allocate a receive buffer failed
+		alloc_recvbuf,
+
+		// an attempt to allocate a send buffer failed
+		alloc_sndbuf,
+
+		// writing to a file failed
+		file_write,
+
+		// reading from a file failed
+		file_read,
+
+		// a non-read and non-write file operation failed
+		file,
+
+		// a socket write operation failed
+		sock_write,
+
+		// a socket read operation failed
+		sock_read,
+
+		// a call to open(), to create a socket socket failed
+		sock_open,
+
+		// a call to bind() on a socket failed
+		sock_bind,
+
+		// an attempt to query the number of bytes available to read from a socket
+		// failed
+		available,
+
+		// a call related to bittorrent protocol encryption failed
+		encryption,
+
+		// an attempt to connect a socket failed
+		connect,
+
+		// establishing an SSL connection failed
+		ssl_handshake,
+
+		// a connection failed to satisfy the bind interface setting
+		get_interface,
+
+		// the error was unexpected and it is unknown which operation caused it
+		unknown,
+	};
+
+#ifndef TORRENT_NO_DEPRECATE
+	enum TORRENT_DEPRECATED deprecated_operation_t : std::uint8_t
 	{
 		// this is used when the bittorrent logic
 		// determines to disconnect
@@ -101,6 +168,7 @@ namespace libtorrent {
 		// the error was unexpected and it is unknown which operation caused it
 		op_unknown,
 	};
+#endif
 
 }
 
